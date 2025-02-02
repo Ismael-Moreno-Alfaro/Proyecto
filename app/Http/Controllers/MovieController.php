@@ -22,13 +22,18 @@ class MovieController extends Controller
 
     public function adminIndex()
     {
-        $movies = Movie::select('movies.*')
-            ->leftJoin('movie_watchlist_movie', 'movies.id', '=', 'movie_watchlist_movie.movie_id')
-            ->selectRaw('COUNT(movie_watchlist_movie.movie_id) as in_watchlist')
-            ->groupBy('movies.id')
-            ->get();
+        $movies = Movie::withCount('watchlistMovies as in_watchlist')
+        ->get();
 
-        return Inertia::render('Admin/MoviesIndex', ['movies' => $movies]);
+    return Inertia::render('Admin/MoviesIndex', ['movies' => $movies]);
+
+        // $movies = Movie::select('movies.*')
+        //     ->leftJoin('movie_watchlist_movie', 'movies.id', '=', 'movie_watchlist_movie.movie_id')
+        //     ->selectRaw('COUNT(movie_watchlist_movie.movie_id) as in_watchlist')
+        //     ->groupBy('movies.id')
+        //     ->get();
+
+        // return Inertia::render('Admin/MoviesIndex', ['movies' => $movies]);
     }
 
     /**
